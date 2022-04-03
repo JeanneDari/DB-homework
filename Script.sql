@@ -9,3 +9,5 @@ create table if not exists genres
 (id serial primary key, name varchar(40) not null, artist_id integer references artist(id));*/
 ALTER TABLE genres DROP COLUMN artist_id;
 ALTER TABLE artist ADD genre_id integer references genres(id);
+alter table album drop column release_date;
+alter table album add release_date integer ;
