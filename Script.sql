@@ -12,7 +12,7 @@ ALTER TABLE artist ADD genre_id integer references genres(id);
 alter table album drop column release_date;
 alter table album add release_date integer ;*/
 
---Домашнее задание «Проектирование БД. Связи. 3НФ»:
+--homework DB project:
 create table if not exists artist_genre (
 artist_id integer references artist(id),
 genre_id integer references genres(id),
