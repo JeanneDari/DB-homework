@@ -148,3 +148,78 @@ where a."name" not like '% %';
 select s.track  from songs s 
 where s.track ilike '%my%';
 
+--homework JOIN, GROUP BY
+--1
+select g."name" genre, count(a.id) artist_count from artist a 
+join artist_genre ag on a.id =ag.artist_id 
+join genres g on ag.genre_id =g.id 
+group by g."name";
+
+--2
+update album  set release_date = 2019 where id = 3;
+
+select a.release_date, count(s.id)  from songs s 
+join album a on s.album_id =a.id 
+where a.release_date between 2019 and 2020
+group by a.release_date 
+
+--3
+select a."name" , avg(s.duration )  from songs s 
+join album a on s.album_id =a.id 
+group by a."name" 
+
+--4
+select a."name"  from artist a 
+join artist_album aa on a.id =aa.artist_id 
+join album a2 on a2.id =aa.album_id 
+where a2.release_date != 2020
+
+--5
+select e."name"  from essentials e 
+join essent_songs es on e.id =es.song_id 
+join songs s on es.song_id =s.id 
+join album a on a.id =s.album_id 
+join artist_album aa  on aa.album_id = a.id 
+join artist a2 on a2.id = aa.artist_id 
+where a2."name" ='Johnny';
+
+--6 
+insert into artist_album (artist_id, album_id) values (4,4);
+
+select a2."name",count(g.id)  from genres g 
+join artist_genre ag on g.id =ag.artist_id 
+join artist a on ag.artist_id =a.id 
+join artist_album aa on aa.artist_id =a.id 
+join album a2 on a2.id =aa.album_id 
+group by  a2."name"
+having count(g.id)>1 ;
+
+--7
+select track from songs s2 
+where s2.track not in
+	(select track from songs s 
+	join essent_songs es on s.id =es.song_id);
+
+--8
+select a."name" from artist a 
+join artist_album aa on aa.artist_id =a.id 
+join album a2 on a2.id =aa.album_id 
+join songs s on s.album_id =a2.id
+where s.duration in
+	(select min(s.duration) from artist a 
+	join artist_album aa on aa.artist_id =a.id 
+	join album a2 on a2.id =aa.album_id 
+	join songs s on s.album_id =a2.id );
+	
+--9
+update songs set album_id =3 where id=1;
+
+select a_name from
+(select a."name" a_name, count(s.id) c from album a 
+	join songs s on s.album_id =a.id
+	group by a.id) t where t.c in 
+		(select min(f.c) from
+			(select a.id, a."name" a_name, count(s.id) c from album a 
+			join songs s on s.album_id =a.id
+			group by a.id) f );
+
